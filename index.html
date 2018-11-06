@@ -1,0 +1,287 @@
+<html ng-app = "listaTelefonica">
+
+	
+
+	<head>
+
+		<title> Lista Telefonica ENACOM </title>
+
+		<link rel="stylesheet" href="lib/bootstrap/bootstrap.css" type="text/css"> <!--Carrega o arquivo de estilo--> 
+ 
+
+		<script src="lib/angular/angular.js"></script>
+
+		<script>
+
+
+			let p1 ={
+				nome: "Pedro" , telefone: "99998887"
+			}
+			let p2 ={
+				nome: "Carlos" , telefone: "93798887"
+			}
+			let p3 ={
+				nome: "José" , telefone: "99969207"
+			}
+
+			let op1={
+				nome:"Oi",
+				codigo: 31,
+				categoria:"Em conta"
+			}
+
+			let op2={
+				nome:"Tim",
+				codigo: 37,
+				categoria:"Em conta"
+			}
+
+			let op3={
+				nome:"Vivo",
+				codigo: 41,
+				categoria:"Qualidade"
+			}
+
+			let op4={
+				nome:"Claro",
+				codigo: 10,
+				categoria:"Qualidade"
+			}
+
+			angular.module ("listaTelefonica" , []) ; //instancia o modulo da aplicacao
+			angular.module ("listaTelefonica").controller("appCtrl" , function($scope){ //instacia o controlador
+
+
+				$scope.titulo = "LISTA TELEFONICA " ; 
+				$scope.contatos= [p1,p2,p3];
+				$scope.operadoras= [op1,op2,op3,op4];  
+
+
+
+
+				$scope.addContato = function (contato_entrada) {
+
+
+					$scope.contatos.push(contato_entrada);
+					
+				}
+
+				$scope.podeClicar= function(){
+					
+				for(let i=0 ; i < arguments.length ; i = i+ 1 ){	
+					
+					let campo= arguments[i];	
+
+					if(campo==null){ //Se algum campo for nulo, não autoriza o botão a ser clickado
+						return false;
+					}
+
+				}	
+					
+
+					return true;
+				}
+
+
+
+			});
+
+
+
+
+		 </script>
+
+
+		 <style>
+		 .jumbotron{   /*REDEFINE A CLASSE JUMBOTRON PARA OUTRAS CARACTERÍSTICAS ARBITRÁRIAS*/
+
+		 	width: 700px;
+		 	text-align: center;
+		 	margin-right: auto; /*Centraliza*/
+		 	margin-left: auto;
+		 	margin-top: 25px; /*Arreda pra baixo*/
+
+		  }
+
+
+		  .table{
+
+
+
+		  	margin-right: auto; /*Centraliza*/
+		 	margin-left: auto;
+		 	margin-top: 25px; /*Arreda pra baixo*/
+
+		  }
+
+		  .form-control{
+
+
+		  	margin-top: 15px; /*Arreda pra baixo*/
+
+
+
+		  }
+
+		  .btn-primary{
+
+		  	margin-top: 30px; /*Arreda pra baixo*/	
+
+		  }
+
+
+		</style>
+
+
+
+	
+	</head>	
+
+
+
+
+
+	<body ng-controller = "appCtrl">
+
+		<div class = "jumbotron" > <!--Carrega uma classe do bootstap.css -->
+
+
+			<h3 ng-bind = "titulo"> <!--Já pega o "titulo" lá do appCtrl, para poder trabalhar, não necessita $scope (caminho programa 							- tela usuario )---> 
+
+			</h3>	
+
+
+			<!--
+			OUTRA FORMA DE SE ESCREVER ISSO 
+
+			{{titulo}}
+
+			-->
+
+
+
+
+
+			<table class = "table table-striped">  <!--Carrega uma classe do bootstap.css mais uma vez para deixar mais belo -->
+
+				<tr> <th> Nome </th> <th>    Telefone </th> <th> Operadora </th> </tr>
+
+
+				<!--Essa é a estrutura para percorrer o contatos que está no scope e ir mostrando na tabela os dados-->
+				<tr ng-repeat = "percorre in contatos"> <td> {{percorre.nome}} </td> <td> {{percorre.telefone}} </td>
+				<td> {{percorre.operadora.nome}} </td>  </tr>
+
+
+
+			</table>	
+
+			<input class= "form-control" type = "text" ng-model = "contato_entrada.nome" placeholder="Nome"   />	
+			<!--Cria uma caixa de texto, para strings. Os dados recebidos por ela
+			são repassados para o scope com o ng-model (caminho usuário -> programa)-->
+
+			<input class ="form-control" type =  "text" ng-model = "contato_entrada.telefone" placeholder="Telefone"    />
+
+			<!--Tanto atualiza essas novas variáveis do escope chamdas nome/telefone_entrada, quanto fazem a notificação, exibição
+				do valor correto para o usuário-->
+
+			<select class="form-control" 
+					ng-model="contato_entrada.operadora" 
+					ng-options="operadora.nome group by operadora.categoria for operadora in operadoras" 
+					align="center">
+
+					<!--
+					Oque a seleção do select retornará, será o contato.operadora, por isso está no ng-model
+					A caixa de seleção ng-options, listará o atribudo operadora.nome de cada operadora, 
+					percorrida no vetor operadoras, definido no escopo.
+
+
+					-->
+
+					<option value="">
+					Selecione uma operadora
+						<!--
+
+						Aqui é definido o valor padrão da caixa, quando nada está selecionado e o que será mostrado
+						como texto quando ela estiver como nada.	
+
+						-->
+
+					</option>
+	
+			</select>	
+
+
+			<button class="btn btn-primary"
+					 ng-disabled ="!podeClicar(contato_entrada.nome , contato_entrada.telefone , contato_entrada.operadora.nome )" 
+					 ng-click= "addContato(contato_entrada)"> 
+
+							Adicionar Contato 
+
+							<!--
+							Cria um botão, cujo ng-click invoca a função chamada addContato(). Essa função deve estar definida no $scope, lá em cima
+							para que faça o push do contato assim que o botão seja adicionado. Se algum dos campos está vazio, a função podeClicar()
+							é chamada e desabilita o botão
+
+							-->
+			</button>
+
+
+		
+
+
+			
+				
+
+				
+
+
+			<!--
+				DIRETIVAS UTILIZADAS ATÉ AGORA
+
+				ng-controller: faz acesso a um controlador da aplicação, já definido previamente
+				
+				ng-bind: acessa um campo de $scope para trabalhar dentro de alguma tag 
+
+				ng-model: ideal para caixas de texto, salva na variável nomeada aqui, o valor digitado na box. Essa variável é 					  imediatamente criada no escopo.
+				
+				ng-repeat: é colocada uma string, que cria uma variável para percorrer uma lista/array do escopo
+				
+				ng-click: chama uma função, que deve estar definida no escopo, para realizar funções, idealmente passa passa parâmetros
+				
+				ng-disable: verifica a validade de uma expressão, se true, invalida o botão
+
+				ng-select: "percorre.nome for percorre in array", vai mostrar na lista todos os percorre.nome que encontrar em array,
+							assim que um deles for selecionado, colocara esse objeto no ng-model declarado antes ao ng-select, se ele for corretamente referenciado, ou seja, ng-model = "objeto.percorre". Agora, a variável objeto com o campo percorre, selecionado do select existe no escopo e pode ser manipulada
+
+
+				ng-select (group-by): 																															"percorre.nome group by percorre.catergoria for percorre in array", vai mostrar na lista todos 							os percorre.nome que encontrar em array,organizados de acordo com o critério definido em 								percorre.categoria.
+			
+
+
+			-->	
+
+
+
+
+
+			<script >
+				
+			
+			</script>	
+				
+			
+
+		</div>	
+
+
+
+
+
+
+	</body>		
+
+
+
+
+
+</html>
